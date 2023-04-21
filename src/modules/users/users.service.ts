@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Model } from 'mongoose';
-import { User, userDocument } from './entities/user.entity';
-import { InjectModel } from '@nestjs/mongoose';
-import * as nodemailer from 'nodemailer';
-import { JwtService } from '@nestjs/jwt';
-import { FriendRequestDto } from './dto/friend-request.dto';
+import { Injectable } from "@nestjs/common";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { Model } from "mongoose";
+import { User, userDocument } from "./entities/user.entity";
+import { InjectModel } from "@nestjs/mongoose";
+import * as nodemailer from "nodemailer";
+import { JwtService } from "@nestjs/jwt";
+import { FriendRequestDto } from "./dto/friend-request.dto";
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -58,7 +59,7 @@ export class UsersService {
     if (!user) {
       return 'User does not exist';
     }
-    user.password = password;
+    user.password = Buffer.from(password).toString('base64');
     await user.save();
     return 'Password updated';
   }
