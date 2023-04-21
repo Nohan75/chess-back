@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { Model } from "mongoose";
-import { User, userDocument } from "./entities/user.entity";
-import { InjectModel } from "@nestjs/mongoose";
-import * as nodemailer from "nodemailer";
-import { JwtService } from "@nestjs/jwt";
-import { FriendRequestDto } from "./dto/friend-request.dto";
+import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Model } from 'mongoose';
+import { User, userDocument } from './entities/user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import * as nodemailer from 'nodemailer';
+import { JwtService } from '@nestjs/jwt';
+import { FriendRequestDto } from './dto/friend-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -75,11 +75,6 @@ export class UsersService {
   findAll() {
     return this.userModel.find().exec();
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
