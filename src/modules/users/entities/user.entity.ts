@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Friend } from "./friend.entity";
 
 export type userDocument = User & Document;
 
@@ -13,12 +14,11 @@ export class User {
 
   @Prop({ required: true })
   password: string;
+  @Prop({ required: true, type: [{ username: String, email: String }] })
+  friends: Friend[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  friends: User[];
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  friendRequests: User[];
+  @Prop({ required: true, type: [{ username: String, email: String }] })
+  friendRequests: Friend[];
 
   @Prop({ default: new Date() })
   createdAt: Date;
