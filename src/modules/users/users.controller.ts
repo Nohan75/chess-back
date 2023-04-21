@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -36,6 +37,16 @@ export class UsersController {
         user,
       });
     }
+  }
+
+  @Post('/forgot-password')
+  async forgotPassword(@Body() { email }): Promise<string> {
+    return await this.usersService.forgotPassword(email);
+  }
+
+  @Put('/reset-password')
+  async resetPassword(@Body() { cryptEmail, password }): Promise<string> {
+    return await this.usersService.resetPassword(cryptEmail, password);
   }
 
   @Post('/friend-request')
@@ -109,9 +120,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('/user-exist/:email')
+  async isUserExist(@Param('email') email: string): Promise<boolean> {
+    return await this.usersService.userAlreadyExists(email);
+  }
+
+  @Get(':email')
+  findOne(@Param('email') email: string) {
+    return this.usersService.getUserByEmail(email);
   }
 
   @Patch(':id')
