@@ -22,6 +22,9 @@ export class User {
 
   @Prop({ default: new Date() })
   createdAt: Date;
+
+  @Prop({ default: 200 })
+  money: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
