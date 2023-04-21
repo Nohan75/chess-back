@@ -6,6 +6,7 @@ import * as process from 'process';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from '../modules/users/users.module';
 import { AuthModule } from '../modules/auth/auth.module';
+import { PartiesModule } from "../modules/parties/parties.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from '../modules/auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    PartiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
