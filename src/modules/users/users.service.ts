@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as nodemailer from 'nodemailer';
 import { JwtService } from '@nestjs/jwt';
 import { FriendRequestDto } from './dto/friend-request.dto';
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -65,6 +64,9 @@ export class UsersService {
   }
 
   create(createUserDto: CreateUserDto): Promise<User> {
+    createUserDto.password = Buffer.from(createUserDto.password).toString(
+      'base64',
+    );
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
   }

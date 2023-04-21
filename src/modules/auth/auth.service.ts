@@ -13,7 +13,8 @@ export class AuthService {
   async login(email: string, pass: string) {
     const user = await this.usersService.getUserByEmail(email);
     if (!user) throw new Error('User not found');
-    if (user.password !== pass) {
+    const cryptPass = Buffer.from(pass).toString('base64');
+    if (user.password !== cryptPass) {
       throw new UnauthorizedException();
     }
     const payload = { email: user.email, sub: user.username };
