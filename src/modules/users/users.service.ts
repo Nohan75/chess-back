@@ -4,11 +4,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
 import { User, userDocument } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import * as nodemailer from 'nodemailer';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<userDocument>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async me(email: string): Promise<User> {
@@ -22,6 +25,42 @@ export class UsersService {
   async userAlreadyExists(email: string): Promise<boolean> {
     const user = await this.getUserByEmail(email);
     return !!user;
+  }
+
+  async forgotPassword(email: string): Promise<string> {
+    const user = await this.userAlreadyExists(email);
+    if (!user) {
+      return 'User does not exist';
+    }
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'naomi.gislason95@ethereal.email',
+        pass: 'gPV6kXTg9NSDmtZ3sS',
+      },
+    });
+    const cryptEmail = Buffer.from(email).toString('base64');
+    const url = 'http://localhost:5173/reset-password/' + cryptEmail;
+    transporter.sendMail({
+      from: '"Nohan Admin" <nohanmarielouise@gmail.com>',
+      to: email,
+      subject: 'Reset Password',
+      text: url,
+      html: '<a href={url}>Reset Password</a>',
+    });
+    return 'Email sent';
+  }
+
+  async resetPassword(cryptEmail: string, password: string): Promise<string> {
+    const email = Buffer.from(cryptEmail, 'base64').toString('ascii');
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      return 'User does not exist';
+    }
+    user.password = password;
+    await user.save();
+    return 'Password updated';
   }
 
   create(createUserDto: CreateUserDto): Promise<User> {
